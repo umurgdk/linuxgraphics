@@ -1,0 +1,13 @@
+[package]
+name = "phoenix"
+version = "0.1.0"
+authors = ["Umur Gedik <umurgdk@gmail.com>"]
+
+[dependencies]
+#drm={ git="https://github.com/Smithay/drm-rs", branch="master" }
+drm="0.3.3"
+egl="*"
+gbm= { version="*", features=["drm-support"]}
+gl="*"
+rand="*"
+cognitive-graphics = "0.1.0"
