@@ -6,6 +6,8 @@ extern crate gl;
 extern crate cognitive_graphics;
 #[macro_use]
 extern crate failure;
+extern crate udev;
+extern crate input;
 
 use std::ops::Deref;
 
@@ -20,6 +22,9 @@ use drm::control::{ResourceHandle, ResourceInfo};
 mod device;
 mod display;
 mod framebuffer;
+mod input_interface;
+
+use self::input_interface::InputInterface;
 
 fn main() {
     let gpu = device::open("/dev/dri/card0");
@@ -37,6 +42,12 @@ fn main() {
 
     surface.swap_buffers(&gpu);
     gpu.modeset(crtc, &[display], &surface);
+
+    // start input system
+    let udev_ctx = udev::Context::new().expect("[udev] failed to create context");
+    let mut input_ctx = input::Libinput::new_from_udev(InputInterface::new(), &udev_ctx);
+    input_ctx.udev_assign_seat("seat0")
+        .expect("[udev] failed to assign seat0");
 
     gl::load_with(|s| egl::get_proc_address(s) as *const std::os::raw::c_void);
 
