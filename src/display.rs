@@ -1,6 +1,4 @@
-use std::ptr;
 use std::ops::Deref;
-use std::os::unix::io::AsRawFd;
 
 use drm::control::crtc;
 use drm::control::encoder;
@@ -11,10 +9,10 @@ use drm::control::ResourceInfo;
 
 use egl;
 use gbm;
-use gbm::BufferObjectFlags;
+use gbm::Format;
 
-use device::{Gpu, DeviceFile};
-use framebuffer::{Framebuffer, Format};
+use device::Gpu;
+use framebuffer::Framebuffer;
 
 pub struct Display {
     pub identifier: String,
@@ -105,7 +103,9 @@ impl Surface {
             fb.handle()
         };
 
-        bo.set_userdata(handle);
+        if let Err(err) = bo.set_userdata(handle) {
+            eprintln!("[gbm] failed to set user data: {}", err);
+        }
         handle
     }
 }

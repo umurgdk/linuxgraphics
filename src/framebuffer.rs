@@ -1,13 +1,4 @@
-use std::os::raw::c_void;
-
 use drm::control::framebuffer as dev_fb;
-use gbm;
-pub use gbm::Format;
-use egl;
-
-use device::Gpu;
-
-pub type Image = *const c_void;
 
 pub struct Framebuffer {
     pub drm_fb: dev_fb::Handle,

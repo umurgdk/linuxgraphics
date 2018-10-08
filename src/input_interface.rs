@@ -17,8 +17,17 @@ impl InputInterface {
 }
 
 impl input::LibinputInterface for InputInterface {
-    fn open_restricted(&mut self, path: &Path, flags: i32) -> Result<RawFd, i32> {
-        let file = File::open(path).map_err(|e| e.raw_os_error().unwrap_or(-1))?;
+    fn open_restricted(&mut self, path: &Path, _flags: i32) -> Result<RawFd, i32> {
+        println!("[libinput] open {:?}", path);
+
+        let file = match File::open(path) {
+            Ok(file) => file,
+            Err(err) => {
+                eprintln!("[libinput] failed to open file {:?}", path);
+                return Err(err.raw_os_error().unwrap_or(-1));
+            }
+        };
+
         let fd = file.as_raw_fd();
         self.files.insert(fd, file);
         Ok(fd)

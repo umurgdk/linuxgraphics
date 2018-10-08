@@ -7,9 +7,8 @@ use std::ptr;
 
 use drm::Device as DrmDevice;
 use drm::control::Device as DrmControlDevice;
-use drm::control::framebuffer as drm_fb;
 use drm::control::{ResourceHandle, ResourceInfo};
-use drm::control::{self, connector, encoder, crtc, Mode};
+use drm::control::{connector, encoder, crtc, Mode};
 
 use gbm;
 use gbm::AsRaw;
@@ -17,7 +16,6 @@ use gbm::AsRaw;
 use egl;
 
 use display::{Display, Surface as DisplaySurface};
-use framebuffer::Framebuffer;
 
 pub struct DeviceFile(File);
 
@@ -114,7 +112,7 @@ impl Gpu {
             .expect("[gpu] failed receive crtc events")
     }
 
-    pub fn initialize_display(&self, display: &Display, crtc: crtc::Handle, format: gbm::Format, mode: Mode) -> DisplaySurface {
+    pub fn initialize_display(&self, _display: &Display, crtc: crtc::Handle, format: gbm::Format, mode: Mode) -> DisplaySurface {
         use cognitive_graphics::egl_tools;
 
         let egl_display = egl_tools::get_gbm_display(self.gbm_device.as_raw() as _)
